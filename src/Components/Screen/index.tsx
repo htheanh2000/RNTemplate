@@ -18,9 +18,7 @@ const Screen: FunctionComponent<ScreenProps> = ({ children, style }) => {
     return (
         <View style={mainView}>
             <SafeAreaView style={[ScreenStyle, style]}>
-                <ScrollView style={{height: S_HEIGHT}}>
                     {children}
-                </ScrollView>
             </SafeAreaView>
         </View>
     )

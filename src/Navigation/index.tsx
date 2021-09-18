@@ -1,51 +1,34 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack'
-import * as Screens  from '@/Screens'
+import { Provider } from 'react-redux'
+import { useSelector } from 'react-redux';
+import { store, persistor } from '@/Middleware'
+import { RootState } from '@/Middleware/Reducers'
+import SplashScreen from '@/Screens/OtherScreens/SplashScreen';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import AuthFlow from './auth'
+import MainFlow from './main';
 
-const Stack = createStackNavigator()
-const Tab = createBottomTabNavigator();
 
-const authFlow = () => {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="LogInScreen" component={Screens.LogInScreen} />
-      </Stack.Navigator>
-    )
-  }
-
-  function HomeStack() {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
-      </Stack.Navigator>
-    );
-  }
-
-  function SettingStack() {
-    return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Setting" component={Screens.SettingScreen} />
-      </Stack.Navigator>
-    );
-  }
-  const mainFlow = () => {
-    return (
-      <Tab.Navigator screenOptions={{headerShown: false}}>
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen name="Setting" component={SettingStack} />
-      </Tab.Navigator>
-    )
-  }
+const Main = (): React.ReactElement => {
+  const { accessToken } = useSelector((state: RootState) => state.user)
+  return (
+    <>
+      {accessToken ? <MainFlow /> : <AuthFlow />}
+    </>
+  )
+}
 
 const App = (): React.ReactElement => {
-    const isLoggedIn = true
-    return (
-        <NavigationContainer>
-                {isLoggedIn ? mainFlow() : authFlow()}
-        </NavigationContainer>
-    )
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <PersistGate loading={<SplashScreen />} persistor={persistor}>
+          <Main />
+        </PersistGate>
+      </NavigationContainer>
+    </Provider>
+  )
 }
 
 export default App
