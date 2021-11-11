@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '@/Middleware/Actions'
+import Card from '@/Assets/Images/Allison.png'
 const LogInScreen = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
